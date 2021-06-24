@@ -6,11 +6,11 @@
 /// <summary>
 /// Task 行为树基类, 所有的行为都继承这个类
 /// </summary>
-class Task
+class Task:public std::enable_shared_from_this<Task>
 {
 
 protected:
-	 enum taskState
+	enum taskState
 	{
 		SUCCESS,
 		FAILED,
@@ -22,7 +22,8 @@ protected:
 	Task() {};
 	
 public:
-	Task* child;
+	using TaskPtr = std::shared_ptr<Task>;
+	TaskPtr child;
 	
 	Task(std::string n) :name(n),currentState(INITIALED) {}
 	virtual taskState run() {
@@ -41,15 +42,14 @@ public:
 	{
 		child=&(std::move(task));
 	}*/
-	virtual bool addChild(Task&& task)
+	virtual bool addChild(TaskPtr&& task)
 	{
-		child = &task;
+		child = task;
 	}
-	virtual bool removeChild( Task& task)
+	virtual bool removeChild( TaskPtr& task)
 	{
-		if (child == &task)
+		if (child == task)
 		{
-			delete child;
 			child = nullptr;
 		}
 	}

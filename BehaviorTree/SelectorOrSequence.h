@@ -4,25 +4,20 @@ class SelectorOrSequence :
     public Task
 {
 public:
-    std::vector<Task*> children;
-	virtual bool addChild(Task&& task)
+    std::vector<TaskPtr> children;
+	virtual bool addChild(TaskPtr&& task)
 	{
-		children.push_back(&task);
+		children.push_back(task);
 	}
-	virtual bool removeChild(Task& task)
+	virtual bool removeChild(const TaskPtr& task)
 	{
-		Task* deleteItem;
 		for(int i=0;i<children.size();++i)
-		if (children[i]== &task)
+		if (children[i]== task)
 		{
-			deleteItem = children[i];
 			children.erase(children.begin()+i);
 			break;
 		}
-		if (deleteItem)
-		{
-			delete deleteItem;
-		}
+		
 	}
 	virtual taskState run() {
 		return INITIALED;
